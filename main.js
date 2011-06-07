@@ -26,11 +26,11 @@ Database.prototype.list = function (filter, cb) {
     cb = filter
     filter = null
   }
-  fs.listdir(this._root, function (error, files) {
+  fs.readdir(this._root, function (error, files) {
     if (error) return cb(error)
     var r = files.map(function (i) {
       if (i.slice(i.length - 5) === '.json') {
-        i = i.slice(i.length - 5)
+        i = i.slice(0, i.length - 5)
         if (filter && filter(i)) return i
         else return i
       }
@@ -44,6 +44,21 @@ Database.prototype.get = function (key, cb) {
     cb(null, JSON.parse(buffer.toString()))
   })
 }
+
+Database.prototype.mget = function (keys, cb) {
+  var results = []
+    , pending = keys.length
+    ;
+  for (var i=0;i<keys.length;i++) {
+    this.get(keys[i], function (error, doc) {
+      pending--
+      if (error) return; // Swallows unfound keys
+      results.push(doc)
+      if (pending === 0) cb(results)
+    })
+  }
+}
+
 Database.prototype.put = function (obj, cb) {
   var self = this;
   if (!obj._id) {
@@ -69,7 +84,7 @@ Database.prototype.put = function (obj, cb) {
     }
   })
 }
-Database.prototype.pullCouchDB = function (url, cb) {
+Database.prototype.clone = function (url, cb) {
   var self = this
   if (url[url.length - 1] !== '/') url += '/'
   request(url+'_all_docs?include_docs=true', function (e, resp, body) {
@@ -89,7 +104,19 @@ Database.prototype.pullCouchDB = function (url, cb) {
     })
   })
 }
-
+Database.prototype.all = function (cb) {
+  var self = this
+  self.list(function (error, keys) {
+    keys.forEach(function (k) {
+      self.get(k, function (e, doc) {
+        cb(doc);
+      })
+    })
+  })
+}
+Database.prototype.getLength = function () {
+  return fs.readdirSync(this._root).length
+}
   
 exports.createDatabase = function (directory) {
   return new Database(directory)

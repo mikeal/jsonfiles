@@ -24,7 +24,7 @@ You can store other files in the same directory, all files that do not have a .j
 
 #### Database.get(id, callback)
 
-Get the json object with the specified _id_.
+Get the object with the specified _id_.
 
 _callback_ is a function that takes two arguments: _error_ and _obj_.
 

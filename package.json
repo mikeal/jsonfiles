@@ -1,0 +1,13 @@
+{
+  "author": "Mikeal Rogers <mikeal.rogers@gmail.com>",
+  "name": "jsonfiles",
+  "description": "Simple flat file database of json object.",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mikeal/jsonfiles.git"
+  },
+  "main": "main.js",
+  "dependencies": {},
+  "devDependencies": {}
+}
