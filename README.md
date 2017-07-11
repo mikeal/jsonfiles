@@ -1,5 +1,7 @@
 # jsonfiles -- Simple flat file database holding JSON objects
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/mikeal/jsonfiles.svg)](https://greenkeeper.io/)
+
 ## Install
 
 From source:
